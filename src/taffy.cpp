@@ -28,21 +28,43 @@
 
 #include <QtDebug>
 
-using namespace taffy;
+namespace taffy {
 
-Taffy::Taffy(int &argc, char **argv)
-    : QCoreApplication(argc, argv)
+enum TagAction
 {
-    setApplicationName("Taffy");
-    setApplicationVersion("0.0.1");
-}
+    NoAction,
+    AddTagAction,
+    RemoveTagAction,
+    ShowTagsAction,
+    ListFilesAction
+};
 
-int Taffy::run()
+struct TaggingQuery
 {
-    QCommandLineParser parser;
-    parser.setApplicationDescription("Taffy: A file tagging utility.");
-    parser.addHelpOption();
-    parser.addVersionOption();
+    TaggingQuery() : tagAction(NoAction) { }
+    bool setTagAction(TagAction ta) {
+        if (tagAction != NoAction) {
+            return false;
+        }
+        tagAction = ta;
+        return true;
+    }
+
+    QStringList files;
+    QString tag;
+    TagAction tagAction;
+};
+
+enum CommandLineParseResult
+{
+    CommandLineOk,
+    CommandLineError,
+    CommandLineVersionRequested,
+    CommandLineHelpRequested
+};
+
+CommandLineParseResult parseCommandLine(QCommandLineParser &parser, TaggingQuery *query, QString *errorMessage)
+{
     parser.addPositionalArgument("[files]",
                                  QCoreApplication::translate("main", "Files to change tags for (where applicable)."));
 
@@ -65,13 +87,137 @@ int Taffy::run()
                                        QCoreApplication::translate("main", "tag"));
     parser.addOption(listFilesOption);
 
-    // Process the actual command line arguments given by the user
-    parser.process(*this);
+    const QCommandLineOption helpOption = parser.addHelpOption();
+    const QCommandLineOption versionOption = parser.addVersionOption();
+
+    if (!parser.parse(QCoreApplication::arguments())) {
+        *errorMessage = parser.errorText();
+        return CommandLineError;
+    }
+
+    if (parser.isSet(versionOption))
+        return CommandLineVersionRequested;
+
+    if (parser.isSet(helpOption))
+        return CommandLineHelpRequested;
+
+     const QStringList positionalArguments = parser.positionalArguments();
+
+     if (parser.isSet(addTagOption)) {
+         if (!query->setTagAction(AddTagAction)) {
+             *errorMessage = "Can only execute one tagging action.";
+             return CommandLineError;
+         } else {
+             if (positionalArguments.isEmpty()) {
+                 *errorMessage = "You must specify at least one file.";
+                 return CommandLineError;
+             }
+             query->tag = parser.value(addTagOption);
+             query->files = parser.positionalArguments();
+         }
+     }
+
+    if (parser.isSet(removeTagOption)) {
+        if (!query->setTagAction(RemoveTagAction)) {
+            *errorMessage = "Can only execute one tagging action.";
+            return CommandLineError;
+        } else {
+            if (positionalArguments.isEmpty()) {
+                *errorMessage = "You must specify at least one file.";
+                return CommandLineError;
+            }
+            query->tag = parser.value(removeTagOption);
+            query->files = parser.positionalArguments();
+        }
+    }
+
+    if (parser.isSet(showTagsOption)) {
+        if (!query->setTagAction(ShowTagsAction)) {
+            *errorMessage = "Can only execute one tagging action.";
+            return CommandLineError;
+        } else {
+            if (positionalArguments.isEmpty()) {
+                *errorMessage = "You must specify at least one file.";
+                return CommandLineError;
+            }
+            query->files = parser.positionalArguments();
+        }
+    }
+
+    if (parser.isSet(listFilesOption)) {
+        if (!query->setTagAction(ListFilesAction)) {
+            *errorMessage = "Can only execute one tagging action.";
+            return CommandLineError;
+        } else {
+            if (!positionalArguments.isEmpty()) {
+                *errorMessage = QString("Unexpected argument(s): %1.").arg(positionalArguments.join(", "));
+                return CommandLineError;
+            }
+            query->tag = parser.value(listFilesOption);
+        }
+    }
+
+    if (query->tagAction == NoAction) {
+        *errorMessage = "You must specify an action.";
+        return CommandLineError;
+    }
+
+    return CommandLineOk;
+}
+
+
+Taffy::Taffy(int &argc, char **argv)
+    : QCoreApplication(argc, argv)
+{
+    setApplicationName("Taffy");
+    setApplicationVersion("0.0.1");
+}
+
+int Taffy::run()
+{
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Taffy: A file tagging utility.");
+
+    TaggingQuery query;
+    QString errorMessage;
+
+    switch (parseCommandLine(parser, &query, &errorMessage)) {
+    case CommandLineOk:
+        break;
+    case CommandLineError:
+        fputs(qPrintable(errorMessage), stderr);
+        fputs("\n\n", stderr);
+        fputs(qPrintable(parser.helpText()), stderr);
+        return 1;
+    case CommandLineVersionRequested:
+        printf("%s %s\n", qPrintable(QCoreApplication::applicationName()),
+               qPrintable(QCoreApplication::applicationVersion()));
+        return 0;
+    case CommandLineHelpRequested:
+        parser.showHelp();
+        Q_UNREACHABLE();
+    }
 
 #ifdef QT_DEBUG
-    qDebug() << "Positional arguments: " << parser.positionalArguments() << endl;
+    qDebug() << "Query is:";
+    switch (query.tagAction) {
+    case AddTagAction:
+        qDebug() << "Add tag" << query.tag << "on file(s)" << query.files.join(", ");
+        break;
+    case RemoveTagAction:
+        qDebug() << "Remove tag" << query.tag << "on file(s)" << query.files.join(", ");
+        break;
+    case ShowTagsAction:
+        qDebug() << "Show tags of file(s)" << query.files.join(", ");
+        break;
+    case ListFilesAction:
+        qDebug() << "List files with tag" << query.tag;
+        break;
+    case NoAction:
+        qDebug() << "Ooops... something went wrong here.";
+    }
 #endif
-
     return 0;
 }
 
+}
