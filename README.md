@@ -1,1 +1,3 @@
-# taffy
+# Taffy
+
+A file tagging utility.
