@@ -1,0 +1,13 @@
+sudo: required
+
+dist: trusty
+
+language: cpp
+
+addons:
+    apt:
+        packages:
+            - qt5-default
+            - qttools5-dev-tools
+
+script: ./easyCompile
