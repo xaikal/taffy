@@ -1,7 +1,7 @@
 QT += core
 QT -= gui
 
-TARGET = Taffy
+TARGET = taffy
 CONFIG += console
 CONFIG -= app_bundle
 
@@ -14,3 +14,4 @@ SOURCES += \
 HEADERS += \
     taffy.h
 
+include(model/model.pri)
