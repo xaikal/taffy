@@ -44,10 +44,10 @@ mkdir -p "${BUILD_DIR_RELEASE}"
 
 echo "Compiling debug version..."
 cd "${BUILD_DIR_DEBUG}"
-${QMAKE} ${PRO_PATH} ${QMAKE_ARGS} ${QMAKE_ARGS_DEBUG} && make
+(${QMAKE} ${PRO_PATH} ${QMAKE_ARGS} ${QMAKE_ARGS_DEBUG} && make) || exit 1
 
 echo "Compiling release version..."
 cd "${BUILD_DIR_RELEASE}"
-${QMAKE} ${PRO_PATH} ${QMAKE_ARGS} && make
+(${QMAKE} ${PRO_PATH} ${QMAKE_ARGS} && make) || exit 1
 
 cd "${CUR_DIR}"
