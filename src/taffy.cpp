@@ -69,6 +69,7 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, Query **quer
     const QCommandLineOption helpOption = parser.addHelpOption();
     const QCommandLineOption versionOption = parser.addVersionOption();
 
+    *query = 0; // don't rely on caller
     if (!parser.parse(QCoreApplication::arguments())) {
         *errorMessage = parser.errorText();
         return CommandLineError;
@@ -80,20 +81,20 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, Query **quer
     if (parser.isSet(helpOption))
         return CommandLineHelpRequested;
 
-     const QStringList positionalArguments = parser.positionalArguments();
+    const QStringList positionalArguments = parser.positionalArguments();
 
-     if (parser.isSet(addTagOption)) {
-         if (*query) {
-             *errorMessage = "Can only execute one tagging action.";
-             return CommandLineError;
-         } else {
-             if (positionalArguments.isEmpty()) {
-                 *errorMessage = "You must specify at least one file.";
-                 return CommandLineError;
-             }
-             *query = new AddTagQuery(parser.value(addTagOption), positionalArguments);
-         }
-     }
+    if (parser.isSet(addTagOption)) {
+        if (*query) {
+            *errorMessage = "Can only execute one tagging action.";
+            return CommandLineError;
+        } else {
+            if (positionalArguments.isEmpty()) {
+                *errorMessage = "You must specify at least one file.";
+                return CommandLineError;
+            }
+            *query = new AddTagQuery(parser.value(addTagOption), positionalArguments);
+        }
+    }
 
     if (parser.isSet(removeTagOption)) {
         if (*query) {
@@ -155,7 +156,7 @@ int Taffy::run()
     QCommandLineParser parser;
     parser.setApplicationDescription("Taffy: A file tagging utility.");
 
-    Query *query;
+    Query *query = 0;
     QString errorMessage;
 
     switch (parseCommandLine(parser, &query, &errorMessage)) {
