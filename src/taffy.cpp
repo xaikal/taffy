@@ -176,10 +176,12 @@ int Taffy::run()
         Q_UNREACHABLE();
     }
 
-
 #ifdef QT_DEBUG
     qDebug() << "Query is" << query->print();
 #endif
+
+    delete query;
+
     return 0;
 }
 
