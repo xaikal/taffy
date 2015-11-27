@@ -29,6 +29,9 @@
 
 namespace taffy {
 
+/**
+ * \brief   A command line frontend to tag files.
+ */
 class Taffy : public QCoreApplication
 {
 public:
