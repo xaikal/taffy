@@ -28,14 +28,27 @@
 #include <QString>
 #include <QStringList>
 
+/**
+ * \brief   A query that is performed with Taffy.
+ */
 class Query
 {
 public:
     explicit Query(const QStringList &files);
     virtual ~Query();
 
+    /**
+     * \brief   Returns a string representation of the query.
+     *
+     * \return  string representation of the query.
+     */
     virtual QString print() const = 0;
 
+    /**
+     * \brief   List all files matching the query.
+     *
+     * \return  List of files matching the query.
+     */
     QStringList getFiles() const;
 
 private:
