@@ -25,9 +25,9 @@
 #ifndef SHOWTAGSQUERY_H
 #define SHOWTAGSQUERY_H
 
-#include "tagquery.h"
+#include "query.h"
 
-class ShowTagsQuery : public TagQuery
+class ShowTagsQuery : public Query
 {
 public:
     ShowTagsQuery(const QStringList &files);

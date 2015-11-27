@@ -26,14 +26,20 @@
 #define QUERY_H
 
 #include <QString>
+#include <QStringList>
 
 class Query
 {
 public:
-    Query();
+    explicit Query(const QStringList &files);
     virtual ~Query();
 
     virtual QString print() const = 0;
+
+    QStringList getFiles() const;
+
+private:
+    QStringList files;
 };
 
 #endif // QUERY_H

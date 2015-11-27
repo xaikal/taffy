@@ -24,7 +24,8 @@
 
 #include "query.h"
 
-Query::Query()
+Query::Query(const QStringList &files)
+  : files(files)
 {
 
 }
@@ -32,5 +33,10 @@ Query::Query()
 Query::~Query()
 {
 
+}
+
+QStringList Query::getFiles() const
+{
+    return files;
 }
 

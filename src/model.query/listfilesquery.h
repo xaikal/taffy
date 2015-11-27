@@ -22,23 +22,23 @@
  */
 
 
-#ifndef TAGQUERY_H
-#define TAGQUERY_H
+#ifndef LISTFILESQUERY_H
+#define LISTFILESQUERY_H
 
 #include "query.h"
 
-#include <QStringList>
-
-class TagQuery : public Query
+class ListFilesQuery : public Query
 {
 public:
-    explicit TagQuery(const QStringList &files);
-    virtual ~TagQuery();
+    ListFilesQuery(const QString &tag, const QStringList &files);
+    virtual ~ListFilesQuery();
 
-    QStringList getFiles() const;
+    QString getTag() const;
+
+    virtual QString print() const override;
 
 private:
-    QStringList files;
+    QString tag;
 };
 
-#endif // TAGQUERY_H
+#endif // LISTFILESQUERY_H

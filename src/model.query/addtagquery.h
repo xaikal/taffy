@@ -25,9 +25,9 @@
 #ifndef ADDTAGQUERY_H
 #define ADDTAGQUERY_H
 
-#include "tagquery.h"
+#include "query.h"
 
-class AddTagQuery : public TagQuery
+class AddTagQuery : public Query
 {
 public:
     AddTagQuery(const QString &tag, const QStringList &files);

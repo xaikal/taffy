@@ -22,23 +22,30 @@
  */
 
 
-#ifndef FILEQUERY_H
-#define FILEQUERY_H
+#include "listfilesquery.h"
 
-#include "query.h"
-
-class FileQuery : public Query
+ListFilesQuery::ListFilesQuery(const QString &tag, const QStringList &files)
+    : Query(files), tag(tag)
 {
-public:
-    FileQuery(const QString &tag);
-    virtual ~FileQuery();
 
-    QString getTag() const;
+}
 
-    virtual QString print() const override;
+ListFilesQuery::~ListFilesQuery()
+{
 
-private:
-    QString tag;
-};
+}
 
-#endif // FILEQUERY_H
+QString ListFilesQuery::getTag() const
+{
+    return tag;
+}
+
+QString ListFilesQuery::print() const
+{
+    QStringList files(getFiles());
+    if (!files.isEmpty()) {
+        return QString("Show files with tag '%1' matching '%2'").arg(getTag()).arg(files.join(", "));
+    }
+    return QString("Show files with tag '%1'").arg(getTag());
+}
+

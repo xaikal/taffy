@@ -25,9 +25,9 @@
 #ifndef REMOVETAGQUERY_H
 #define REMOVETAGQUERY_H
 
-#include "tagquery.h"
+#include "query.h"
 
-class RemoveTagQuery : public TagQuery
+class RemoveTagQuery : public Query
 {
 public:
     RemoveTagQuery(const QString &tag, const QStringList &files);

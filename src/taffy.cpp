@@ -26,7 +26,7 @@
 #include "model.query/addtagquery.h"
 #include "model.query/removetagquery.h"
 #include "model.query/showtagsquery.h"
-#include "model.query/filequery.h"
+#include "model.query/listfilesquery.h"
 
 #include <QCommandLineParser>
 
@@ -44,8 +44,8 @@ enum CommandLineParseResult
 
 CommandLineParseResult parseCommandLine(QCommandLineParser &parser, Query **query, QString *errorMessage)
 {
-    parser.addPositionalArgument("[files]",
-                                 QCoreApplication::translate("main", "Files to change tags for (where applicable)."));
+    parser.addPositionalArgument("files",
+                                 QCoreApplication::translate("main", "Files to change tags for/that match the tags."));
 
     QCommandLineOption addTagOption(QStringList() << "a" << "add",
                                     QCoreApplication::translate("main", "Add tag <tag>."),
@@ -127,11 +127,7 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, Query **quer
             *errorMessage = "Can only execute one tagging action.";
             return CommandLineError;
         } else {
-            if (!positionalArguments.isEmpty()) {
-                *errorMessage = QString("Unexpected argument(s): %1.").arg(positionalArguments.join(", "));
-                return CommandLineError;
-            }
-            *query = new FileQuery(parser.value(listFilesOption));
+            *query = new ListFilesQuery(parser.value(listFilesOption), positionalArguments);
         }
     }
 

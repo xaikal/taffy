@@ -25,7 +25,7 @@
 #include "addtagquery.h"
 
 AddTagQuery::AddTagQuery(const QString &tag, const QStringList &files)
-    : TagQuery(files), tag(tag)
+    : Query(files), tag(tag)
 {
 
 }
@@ -42,6 +42,6 @@ QString AddTagQuery::getTag() const
 
 QString AddTagQuery::print() const
 {
-    return QString("Add tag %1 to file(s) %2").arg(getTag()).arg(getFiles().join(", "));
+    return QString("Add tag '%1'' to file(s) '%2'").arg(getTag()).arg(getFiles().join(", "));
 }
 

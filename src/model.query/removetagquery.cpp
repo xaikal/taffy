@@ -25,7 +25,7 @@
 #include "removetagquery.h"
 
 RemoveTagQuery::RemoveTagQuery(const QString &tag, const QStringList &files)
-    : TagQuery(files), tag(tag)
+    : Query(files), tag(tag)
 {
 
 }
@@ -42,6 +42,6 @@ QString RemoveTagQuery::getTag() const
 
 QString RemoveTagQuery::print() const
 {
-    return QString("Remove tag %1 from file(s) %2").arg(getTag()).arg(getFiles().join(", "));
+    return QString("Remove tag '%1'' from file(s) '%2'").arg(getTag()).arg(getFiles().join(", "));
 }
 

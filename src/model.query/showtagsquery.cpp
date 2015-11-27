@@ -25,7 +25,7 @@
 #include "showtagsquery.h"
 
 ShowTagsQuery::ShowTagsQuery(const QStringList &files)
-    : TagQuery(files)
+    : Query(files)
 {
 
 }
@@ -37,6 +37,6 @@ ShowTagsQuery::~ShowTagsQuery()
 
 QString ShowTagsQuery::print() const
 {
-    return QString("Show tags for file(s) %1").arg(getFiles().join(", "));
+    return QString("Show tags for file(s) '%1'").arg(getFiles().join(", "));
 }
 
