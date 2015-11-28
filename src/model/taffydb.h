@@ -37,8 +37,6 @@ public:
     bool connect();
     bool disconnect();
 
-    QueryResult *acceptQuery(const Query *query);
-
 private:
     struct TaffyDBImpl;
     TaffyDBImpl *impl;

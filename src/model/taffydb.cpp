@@ -23,6 +23,7 @@
 
 
 #include "taffydb.h"
+#include "dbscheme.cpp"
 
 #include "model.query/query.h"
 
@@ -31,27 +32,6 @@
 struct TaffyDB::TaffyDBImpl {
     QSqlDatabase db;
 };
-
-QSqlError initDb(QSqlDatabase &db) {
-    if (!db.open()) {
-        return db.lastError();
-    }
-
-    QStringList tables = db.tables();
-    if (!tables.contains("files", Qt::CaseInsensitive)) {
-        QSqlQuery q;
-        if (!q.exec(QLatin1String(
-                        "CREATE TABLE files ( "
-                        "id   INTEGER PRIMARY KEY, "
-                        "path VARCHAR NOT NULL "
-                        ")"))) {
-            return q.lastError();
-        }
-    }
-
-    return QSqlError();
-}
-
 
 TaffyDB::TaffyDB()
   : impl(new TaffyDBImpl)
@@ -80,6 +60,9 @@ bool TaffyDB::connect()
     QSqlError error = initDb(impl->db);
 
     if (error.type() != QSqlError::NoError) {
+#ifdef QT_DEBUG
+    qDebug() << error;
+#endif
         return false;
     }
 
@@ -95,19 +78,11 @@ bool TaffyDB::disconnect()
     if (!impl->db.isOpen()) {
         return false;
     }
-    //QString dbConnName(impl->db.connectionName());
+    QString dbConnName(impl->db.connectionName());
 
     impl->db.close();
-    //QSqlDatabase::removeDatabase(dbConnName);
+    impl->db = QSqlDatabase();
+    QSqlDatabase::removeDatabase(dbConnName);
     return true;
-}
-
-QueryResult *TaffyDB::acceptQuery(const Query *query)
-{
-#ifdef QT_DEBUG
-    qDebug() << "TaffyDB accepted query" << query->print();
-#endif
-
-    return NULL;
 }
 
