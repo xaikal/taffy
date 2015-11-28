@@ -28,24 +28,24 @@
 #include "query.h"
 
 /**
- * \brief  A query that lists files with a certain tag.
+ * @brief  A query that lists files with a certain tag.
  */
 class ListFilesQuery : public Query
 {
 public:
     /**
-     * \brief   Creates a new ListFilesQuery.
+     * @brief   Creates a new ListFilesQuery.
      *
-     * \param   tag     The tag that is searched for.
-     * \param   files   An optional pattern of files to restrict the search.
+     * @param   tag     The tag that is searched for.
+     * @param   files   An optional pattern of files to restrict the search.
      */
     ListFilesQuery(const QString &tag, const QStringList &files);
     virtual ~ListFilesQuery();
 
     /**
-     * \brief   Returns the tag that is searched for.
+     * @brief   Returns the tag that is searched for.
      *
-     * \return  Tag that is searched for
+     * @return  Tag that is searched for
      */
     QString getTag() const;
 

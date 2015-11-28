@@ -28,15 +28,15 @@
 #include "query.h"
 
 /**
- * \brief  A query that shows all tags of one or more files.
+ * @brief  A query that shows all tags of one or more files.
  */
 class ShowTagsQuery : public Query
 {
 public:
     /**
-     * \brief   Creates a new ShowTagsQuery.
+     * @brief   Creates a new ShowTagsQuery.
      *
-     * \param   A list of files for which tags are shown
+     * @param   A list of files for which tags are shown
      */
     ShowTagsQuery(const QStringList &files);
     virtual ~ShowTagsQuery();

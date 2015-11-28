@@ -30,7 +30,7 @@
 namespace taffy {
 
 /**
- * \brief   A command line frontend to tag files.
+ * @brief   A command line frontend to tag files.
  */
 class Taffy : public QCoreApplication
 {

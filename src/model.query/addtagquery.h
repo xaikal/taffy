@@ -28,24 +28,24 @@
 #include "query.h"
 
 /**
- * \brief   A query that adds a tag to one or more files.
+ * @brief   A query that adds a tag to one or more files.
  */
 class AddTagQuery : public Query
 {
 public:
     /**
-     * \brief   Creates a new AddTagQuery.
+     * @brief   Creates a new AddTagQuery.
      *
-     * \param   tag     The tag that is added to the file(s).
-     * \param   files   A list of files that are tagged.
+     * @param   tag     The tag that is added to the file(s).
+     * @param   files   A list of files that are tagged.
      */
     AddTagQuery(const QString &tag, const QStringList &files);
     virtual ~AddTagQuery();
 
     /**
-     * \brief   Returns the tag that is added.
+     * @brief   Returns the tag that is added.
      *
-     * \return  Tag that is added
+     * @return  Tag that is added
      */
     QString getTag() const;
 
