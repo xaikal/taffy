@@ -36,7 +36,7 @@ public:
     /**
      * @brief   Creates a new ShowTagsQuery.
      *
-     * @param   A list of files for which tags are shown
+     * @param   files   A list of files for which tags are shown
      */
     ShowTagsQuery(const QStringList &files);
     virtual ~ShowTagsQuery();
