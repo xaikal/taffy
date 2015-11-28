@@ -22,45 +22,42 @@
  */
 
 
-#ifndef QUERY_H
-#define QUERY_H
+#include "querymanager.h"
 
-#include <QString>
-#include <QStringList>
+#include "taffydb.h"
+#include "model.query/query.h"
 
-class TaffyDB;
+#include <QList>
+#include <QtDebug>
 
-/*!
- * A query that is performed with Taffy.
- */
-class Query
-{
-public:
-    /*!
-     * Creates a new Query.
-     *
-     * @param   files   A List of files to perform the query on.
-     */
-    explicit Query(const QStringList &files);
-    virtual ~Query();
-
-    /*!
-     * Returns a string representation of the query.
-     *
-     * @return  string representation of the query.
-     */
-    virtual QString print() const = 0;
-    virtual bool exec(TaffyDB*);
-
-    /*!
-     * List all files matching the query.
-     *
-     * @return  List of files matching the query.
-     */
-    QStringList getFiles() const;
-
-private:
-    QStringList files;
+struct QueryManager::QueryManagerImpl {
+    TaffyDB db;
+    QList<Query*> queries;
 };
 
-#endif // QUERY_H
+QueryManager::QueryManager()
+    : impl(new QueryManagerImpl)
+{
+    impl->db.connect();
+}
+
+QueryManager::~QueryManager()
+{
+    for (auto i = impl->queries.constBegin(); i != impl->queries.constEnd(); i++) {
+        Query *query = *i;
+        delete query;
+    }
+
+    delete impl;
+}
+
+bool QueryManager::acceptQuery(Query *query)
+{
+#ifdef QT_DEBUG
+    qDebug() << "QueryManager: Accepted query" << query->print();
+#endif
+
+    impl->queries.append(query);
+    return query->exec(&impl->db);
+}
+

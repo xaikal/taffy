@@ -28,7 +28,7 @@
 #include "model.query/showtagsquery.h"
 #include "model.query/listfilesquery.h"
 
-#include "model/taffydb.h"
+#include "model/querymanager.h"
 
 #include <QCommandLineParser>
 
@@ -178,16 +178,12 @@ int Taffy::run()
     qDebug() << "Query is" << query->print();
 #endif
 
-    TaffyDB db;
-    if (db.connect()) {
-        db.acceptQuery(query);
-    } else {
-        fputs("Cannot establish connection.", stderr);
-        delete query;
-        return 1;
-    }
+    QueryManager manager;
+    bool success = manager.acceptQuery(query);
 
-    delete query;
+#ifdef QT_DEBUG
+    qDebug() << "Query" << (success ? "was successful." : "failed.");
+#endif
 
     return 0;
 }

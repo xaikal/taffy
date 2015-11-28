@@ -22,45 +22,22 @@
  */
 
 
-#ifndef QUERY_H
-#define QUERY_H
+#ifndef QUERYMANAGER_H
+#define QUERYMANAGER_H
 
-#include <QString>
-#include <QStringList>
+class Query;
 
-class TaffyDB;
-
-/*!
- * A query that is performed with Taffy.
- */
-class Query
+class QueryManager
 {
 public:
-    /*!
-     * Creates a new Query.
-     *
-     * @param   files   A List of files to perform the query on.
-     */
-    explicit Query(const QStringList &files);
-    virtual ~Query();
+    QueryManager();
+    ~QueryManager();
 
-    /*!
-     * Returns a string representation of the query.
-     *
-     * @return  string representation of the query.
-     */
-    virtual QString print() const = 0;
-    virtual bool exec(TaffyDB*);
-
-    /*!
-     * List all files matching the query.
-     *
-     * @return  List of files matching the query.
-     */
-    QStringList getFiles() const;
+    bool acceptQuery(Query *query);
 
 private:
-    QStringList files;
+    struct QueryManagerImpl;
+    QueryManagerImpl *impl;
 };
 
-#endif // QUERY_H
+#endif // QUERYMANAGER_H

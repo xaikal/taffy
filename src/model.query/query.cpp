@@ -35,6 +35,11 @@ Query::~Query()
 
 }
 
+bool Query::exec(TaffyDB*)
+{
+    return false;
+}
+
 QStringList Query::getFiles() const
 {
     return files;
