@@ -27,12 +27,26 @@
 
 #include "query.h"
 
+/*!
+ * A query that removes a tag from one or more files.
+ */
 class RemoveTagQuery : public Query
 {
 public:
+    /*!
+     * Creates a new RemoveTagQuery.
+     *
+     * @param   tag     The tag that is removed from the file(s).
+     * @param   files   A list of files that are de-tagged.
+     */
     RemoveTagQuery(const QString &tag, const QStringList &files);
     virtual ~RemoveTagQuery();
 
+    /*!
+     * Returns the tag that is removed.
+     *
+     * @return  Tag that is removed.
+     */
     QString getTag() const;
 
     virtual QString print() const override;

@@ -27,12 +27,26 @@
 
 #include "query.h"
 
+/*!
+ * A query that adds a tag to one or more files.
+ */
 class AddTagQuery : public Query
 {
 public:
+    /*!
+     * Creates a new AddTagQuery.
+     *
+     * @param   tag     The tag that is added to the file(s).
+     * @param   files   A list of files that are tagged.
+     */
     AddTagQuery(const QString &tag, const QStringList &files);
     virtual ~AddTagQuery();
 
+    /*!
+     * Returns the tag that is added.
+     *
+     * @return  Tag that is added
+     */
     QString getTag() const;
 
     virtual QString print() const override;

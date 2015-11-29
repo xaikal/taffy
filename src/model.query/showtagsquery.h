@@ -27,9 +27,17 @@
 
 #include "query.h"
 
+/*!
+ * A query that shows all tags of one or more files.
+ */
 class ShowTagsQuery : public Query
 {
 public:
+    /*!
+     * Creates a new ShowTagsQuery.
+     *
+     * @param   files   A list of files for which tags are shown
+     */
     ShowTagsQuery(const QStringList &files);
     virtual ~ShowTagsQuery();
 
