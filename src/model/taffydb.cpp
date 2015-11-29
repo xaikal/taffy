@@ -23,18 +23,14 @@
 
 
 #include "taffydb.h"
-#include "dbscheme.cpp"
 
 #include "model.query/query.h"
 
 #include <QtSql>
-
-struct TaffyDB::TaffyDBImpl {
-    QSqlDatabase db;
-};
+#include "dbscheme.cpp"
 
 TaffyDB::TaffyDB()
-  : impl(new TaffyDBImpl)
+  : d(new Data)
 {
 
 }
@@ -42,7 +38,7 @@ TaffyDB::TaffyDB()
 TaffyDB::~TaffyDB()
 {
     disconnect();
-    delete impl;
+    delete d;
 }
 
 bool TaffyDB::connect()
@@ -51,13 +47,13 @@ bool TaffyDB::connect()
     qDebug() << "Connect called.";
 #endif
 
-    if (impl->db.isOpen()) {
+    if (d->db.isOpen()) {
         return false;
     }
 
-    impl->db = QSqlDatabase::addDatabase("QSQLITE");
-    impl->db.setDatabaseName(":memory:");
-    QSqlError error = initDb(impl->db);
+    d->db = QSqlDatabase::addDatabase("QSQLITE");
+    d->db.setDatabaseName(":memory:");
+    QSqlError error = initDb(d->db);
 
     if (error.type() != QSqlError::NoError) {
 #ifdef QT_DEBUG
@@ -75,13 +71,13 @@ bool TaffyDB::disconnect()
     qDebug() << "Disconnect called.";
 #endif
 
-    if (!impl->db.isOpen()) {
+    if (!d->db.isOpen()) {
         return false;
     }
-    QString dbConnName(impl->db.connectionName());
+    QString dbConnName(d->db.connectionName());
 
-    impl->db.close();
-    impl->db = QSqlDatabase();
+    d->db.close();
+    d->db = QSqlDatabase();
     QSqlDatabase::removeDatabase(dbConnName);
     return true;
 }

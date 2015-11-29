@@ -21,9 +21,13 @@
  *   taffy@xaikal.org
  */
 
+#include "model.data/file.h"
+
 #include <QString>
 
 #include <QtSql>
+
+#include <stdexcept>
 
 const QLatin1String DB_CREATE_TABLE_FILES(
         "CREATE TABLE files ( "
@@ -54,9 +58,18 @@ const QLatin1String DB_CREATE_TABLE_TAGGINGS(
 const QLatin1String DB_FIND_FILE_BY_PATH(
         "SELECT * FROM files WHERE file_path = :path");
 
-const QLatin1String DB_DISCOVER_FILE(
+const QLatin1String DB_ADD_FILE(
         "INSERT INTO files (file_path, file_size, file_hash, file_mtime, since) "
         "VALUES            (:path,     :size,     :hash,     :mtime,     datetime('now'))");
+
+const QLatin1String DB_UPDATE_FILE(
+        "UPDATE files SET "
+        "  file_path  = :path, "
+        "  file_size  = :size, "
+        "  file_hash  = :hash, "
+        "  file_mtime = :mtime, "
+        "  since      = datetime('now') "
+        "WHERE id = :id");
 
 const QLatin1String DB_FIND_FILE_BY_TAG(
         "SELECT tg.file "
@@ -75,6 +88,9 @@ const QLatin1String DB_LIST_TAGS_OF_FILE(
         "     files    AS f "
         "WHERE tg.file = f.id"
         "  AND f.file_path  = :path");
+
+const QLatin1String DB_LAST_ROWID("last_insert_rowid()");
+
 
 
 QSqlError checkTable(const QString &table, const QStringList &tables, const QLatin1String &createStatement) {
@@ -109,23 +125,96 @@ QSqlError initDb(QSqlDatabase &db) {
     return QSqlError();
 }
 
-QSqlQuery findFile(const QString &filePath) {
+struct TaffyDB::Data {
+    QSqlDatabase db;
+
+    bool findFile(File &file);
+    void addFile(File &file);
+    bool updateFile(File &file, bool checkExistence = true);
+};
+
+bool TaffyDB::Data::findFile(File &file) {
     QSqlQuery query;
     query.prepare(DB_FIND_FILE_BY_PATH);
-    query.bindValue(":path", filePath);
-    query.exec();
-    return query;
+    query.bindValue(":path", file.getPath());
+    if (!query.exec()) {
+        QSqlError error = query.lastError();
+        throw std::runtime_error(qPrintable(error.text()));
+    }
+
+    // Is file in db (i.e., result set non-empty)?
+    if (query.next()) {
+        int id = query.value(0).toInt();
+        int fileId = file.getIdentifier();
+        if (fileId == DbObject::NO_ID) {
+            file.setIdentifier(id);
+            return true;
+        } else if (fileId == id) {
+            return true;
+        } else {
+            throw std::runtime_error("IDs do not match.");
+        }
+
+        // Is size of result set even greater than one?
+        if (query.next()) {
+            throw std::runtime_error("Duplicate entries in DB.");
+        }
+    }
+
+    return false;
 }
 
-QSqlQuery discoverFile(const QFileInfo &file) {
+void TaffyDB::Data::addFile(File &file) {
+    if (findFile(file)) {
+        //updateFile(file, false);
+        return;
+    }
+
     QSqlQuery query;
-    query.prepare(DB_DISCOVER_FILE);
-    query.bindValue(":path", file.absoluteFilePath());
-    query.bindValue(":size", file.size());
-    query.bindValue(":hash", "");
-    query.bindValue(":size", file.lastModified());
-    query.exec();
-    return query;
+    query.prepare(DB_ADD_FILE);
+    query.bindValue(":path", file.getPath());
+    query.bindValue(":size", file.getSize());
+    query.bindValue(":hash", file.getHash());
+    query.bindValue(":mtime", file.getLastModified());
+    if (!query.exec()) {
+        QSqlError error = query.lastError();
+        throw std::runtime_error(qPrintable(error.text()));
+    }
+
+    if (!query.exec(DB_LAST_ROWID)) {
+        QSqlError error = query.lastError();
+        throw std::runtime_error(qPrintable(error.text()));
+    }
+
+    if (query.next()) {
+        int id = query.value(0).toInt();
+        file.setIdentifier(id);
+    } else {
+        throw std::runtime_error("Could not retrieve last inserted row id.");
+    }
+}
+
+bool TaffyDB::Data::updateFile(File &file, bool checkExistence) {
+    if (checkExistence && !findFile(file)) {
+        return false;
+    } else {
+        if (file.getIdentifier() == DbObject::NO_ID) {
+            throw std::runtime_error("File has no id set.");
+        }
+    }
+
+    QSqlQuery query;
+    query.prepare(DB_UPDATE_FILE);
+    query.bindValue(":id", file.getIdentifier());
+    query.bindValue(":path", file.getPath());
+    query.bindValue(":size", file.getSize());
+    query.bindValue(":hash", file.getHash());
+    query.bindValue(":mtime", file.getLastModified());
+    if (!query.exec()) {
+        QSqlError error = query.lastError();
+        throw std::runtime_error(qPrintable(error.text()));
+    }
+    return true;
 }
 
 QSqlQuery findTaggedFiles(const QString &tag) {

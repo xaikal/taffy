@@ -38,8 +38,8 @@ public:
     bool disconnect();
 
 private:
-    struct TaffyDBImpl;
-    TaffyDBImpl *impl;
+    struct Data;
+    Data *d;
 };
 
 #endif // TAFFYDB_H
