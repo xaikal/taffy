@@ -25,6 +25,8 @@
 #ifndef TAFFYDB_H
 #define TAFFYDB_H
 
+namespace taffy {
+
 class Query;
 class QueryResult;
 
@@ -41,5 +43,7 @@ private:
     struct Data;
     Data *d;
 };
+
+}
 
 #endif // TAFFYDB_H

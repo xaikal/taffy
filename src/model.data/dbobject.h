@@ -25,6 +25,7 @@
 #ifndef DBOBJECT_H
 #define DBOBJECT_H
 
+namespace taffy {
 
 class DbObject
 {
@@ -40,5 +41,7 @@ public:
 private:
     int identifier;
 };
+
+}
 
 #endif // DBOBJECT_H

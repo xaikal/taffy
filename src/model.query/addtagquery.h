@@ -27,6 +27,8 @@
 
 #include "query.h"
 
+namespace taffy {
+
 /*!
  * A query that adds a tag to one or more files.
  */
@@ -54,5 +56,7 @@ public:
 private:
     QString tag;
 };
+
+}
 
 #endif // ADDTAGQUERY_H

@@ -29,6 +29,8 @@
 #include <QtSql>
 #include "dbscheme.cpp"
 
+namespace taffy {
+
 TaffyDB::TaffyDB()
   : d(new Data)
 {
@@ -82,3 +84,4 @@ bool TaffyDB::disconnect()
     return true;
 }
 
+}

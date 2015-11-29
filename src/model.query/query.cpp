@@ -24,6 +24,8 @@
 
 #include "query.h"
 
+namespace taffy {
+
 Query::Query(const QStringList &files)
   : files(files)
 {
@@ -45,3 +47,4 @@ QStringList Query::getFiles() const
     return files;
 }
 
+}

@@ -24,6 +24,8 @@
 
 #include "tag.h"
 
+namespace taffy {
+
 struct Tag::Data {
     int identifier;
     QString tag;
@@ -44,4 +46,6 @@ Tag::~Tag()
 QString Tag::getTag() const
 {
     return d->tag;
+}
+
 }

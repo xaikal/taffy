@@ -24,6 +24,8 @@
 
 #include "showtagsquery.h"
 
+namespace taffy {
+
 ShowTagsQuery::ShowTagsQuery(const QStringList &files)
     : Query(files)
 {
@@ -40,3 +42,4 @@ QString ShowTagsQuery::print() const
     return QString("Show tags for file(s) '%1'").arg(getFiles().join(", "));
 }
 
+}

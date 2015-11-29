@@ -30,6 +30,8 @@
 #include <QList>
 #include <QtDebug>
 
+namespace taffy {
+
 struct QueryManager::QueryManagerImpl {
     TaffyDB db;
     QList<Query*> queries;
@@ -61,3 +63,4 @@ bool QueryManager::acceptQuery(Query *query)
     return query->exec(&impl->db);
 }
 
+}

@@ -26,6 +26,8 @@
 
 #include <QFileInfo>
 
+namespace taffy {
+
 struct File::Data {
     QFileInfo file;
 };
@@ -66,3 +68,4 @@ QDateTime File::getLastModified() const
     return d->file.lastModified();
 }
 
+}

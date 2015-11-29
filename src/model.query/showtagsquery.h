@@ -27,6 +27,8 @@
 
 #include "query.h"
 
+namespace taffy {
+
 /*!
  * A query that shows all tags of one or more files.
  */
@@ -43,5 +45,7 @@ public:
 
     virtual QString print() const override;
 };
+
+}
 
 #endif // SHOWTAGSQUERY_H

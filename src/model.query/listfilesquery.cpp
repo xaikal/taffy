@@ -24,6 +24,8 @@
 
 #include "listfilesquery.h"
 
+namespace taffy {
+
 ListFilesQuery::ListFilesQuery(const QString &tag, const QStringList &files)
     : Query(files), tag(tag)
 {
@@ -49,3 +51,4 @@ QString ListFilesQuery::print() const
     return QString("Show files with tag '%1'").arg(getTag());
 }
 
+}

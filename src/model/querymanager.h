@@ -25,6 +25,8 @@
 #ifndef QUERYMANAGER_H
 #define QUERYMANAGER_H
 
+namespace taffy {
+
 class Query;
 
 class QueryManager
@@ -39,5 +41,7 @@ private:
     struct QueryManagerImpl;
     QueryManagerImpl *impl;
 };
+
+}
 
 #endif // QUERYMANAGER_H

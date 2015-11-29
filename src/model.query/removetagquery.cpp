@@ -24,6 +24,8 @@
 
 #include "removetagquery.h"
 
+namespace taffy {
+
 RemoveTagQuery::RemoveTagQuery(const QString &tag, const QStringList &files)
     : Query(files), tag(tag)
 {
@@ -45,3 +47,4 @@ QString RemoveTagQuery::print() const
     return QString("Remove tag '%1'' from file(s) '%2'").arg(getTag()).arg(getFiles().join(", "));
 }
 
+}

@@ -29,6 +29,8 @@
 
 #include <stdexcept>
 
+namespace taffy {
+
 const QLatin1String DB_CREATE_TABLE_FILES(
         "CREATE TABLE files ( "
         "  id         INTEGER PRIMARY KEY, "
@@ -239,4 +241,6 @@ QSqlQuery listFileTags(const QFileInfo &file) {
     query.bindValue(":path", file.absoluteFilePath());
     query.exec();
     return query;
+}
+
 }

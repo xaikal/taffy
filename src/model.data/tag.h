@@ -29,6 +29,8 @@
 
 #include <QString>
 
+namespace taffy {
+
 class Tag : public DbObject
 {
 public:
@@ -41,5 +43,7 @@ private:
     struct Data;
     Data *d;
 };
+
+}
 
 #endif // TAG_H

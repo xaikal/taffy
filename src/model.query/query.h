@@ -28,6 +28,8 @@
 #include <QString>
 #include <QStringList>
 
+namespace taffy {
+
 class TaffyDB;
 
 /*!
@@ -62,5 +64,7 @@ public:
 private:
     QStringList files;
 };
+
+}
 
 #endif // QUERY_H

@@ -27,6 +27,8 @@
 
 #include "query.h"
 
+namespace taffy {
+
 /*!
  * A query that removes a tag from one or more files.
  */
@@ -54,5 +56,7 @@ public:
 private:
     QString tag;
 };
+
+}
 
 #endif // REMOVETAGQUERY_H

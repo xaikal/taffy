@@ -27,6 +27,8 @@
 
 #include "query.h"
 
+namespace taffy {
+
 /*!
  * A query that lists files with a certain tag.
  */
@@ -54,5 +56,7 @@ public:
 private:
     QString tag;
 };
+
+}
 
 #endif // LISTFILESQUERY_H

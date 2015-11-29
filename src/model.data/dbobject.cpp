@@ -24,6 +24,8 @@
 
 #include "dbobject.h"
 
+namespace taffy {
+
 DbObject::DbObject(int id)
     : identifier(id)
 {
@@ -45,3 +47,4 @@ int DbObject::getIdentifier() const
     return identifier;
 }
 
+}

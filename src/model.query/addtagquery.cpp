@@ -24,6 +24,8 @@
 
 #include "addtagquery.h"
 
+namespace taffy {
+
 AddTagQuery::AddTagQuery(const QString &tag, const QStringList &files)
     : Query(files), tag(tag)
 {
@@ -45,3 +47,4 @@ QString AddTagQuery::print() const
     return QString("Add tag '%1'' to file(s) '%2'").arg(getTag()).arg(getFiles().join(", "));
 }
 
+}

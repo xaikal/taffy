@@ -30,6 +30,8 @@
 #include <QString>
 #include <QDateTime>
 
+namespace taffy {
+
 class File : public DbObject
 {
 public:
@@ -46,5 +48,7 @@ private:
     struct Data;
     Data *d;
 };
+
+}
 
 #endif // FILE_H
