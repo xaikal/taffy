@@ -19,4 +19,5 @@ HEADERS += \
     taffy.h
 
 include(model/model.pri)
+include(model.data/model.data.pri)
 include(model.query/model.query.pri)
