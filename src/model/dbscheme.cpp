@@ -57,7 +57,7 @@ const QLatin1String DB_CREATE_TABLE_TAGGINGS(
 /* FILE MANAGEMENT STATEMENTS */
 
 const QLatin1String DB_FIND_FILE_BY_ID(
-        "SELECT path FROM files WHERE id = :id");
+        "SELECT file_path FROM files WHERE id = :id");
 
 const QLatin1String DB_FIND_FILE_BY_PATH(
         "SELECT id FROM files WHERE file_path = :path");
