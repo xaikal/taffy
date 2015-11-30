@@ -88,4 +88,24 @@ bool TaffyDB::disconnect()
     return true;
 }
 
+void TaffyDB::addTagToFile(Tag &tag, File &file)
+{
+    tagFile(file, tag);
+}
+
+void TaffyDB::removeTagFromFile(Tag &tag, File &file)
+{
+    untagFile(file, tag);
+}
+
+QList<std::shared_ptr<Tag> > TaffyDB::showTagsOfFile(File &file)
+{
+    return showTags(file);
+}
+
+QList<std::shared_ptr<File> > TaffyDB::listFilesWithTag(Tag &tag)
+{
+    return listFilesByTag(tag);
+}
+
 }

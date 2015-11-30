@@ -25,10 +25,14 @@
 #ifndef TAFFYDB_H
 #define TAFFYDB_H
 
-namespace taffy {
+#include "model.data/file.h"
+#include "model.data/tag.h"
 
-class Query;
-class QueryResult;
+#include <QList>
+
+#include <memory>
+
+namespace taffy {
 
 class TaffyDB
 {
@@ -38,6 +42,11 @@ public:
 
     bool connect();
     bool disconnect();
+
+    void addTagToFile(Tag &tag, File &file);
+    void removeTagFromFile(Tag &tag, File &file);
+    QList<std::shared_ptr<Tag> > showTagsOfFile(File &file);
+    QList<std::shared_ptr<File> > listFilesWithTag(Tag &tag);
 
 private:
     struct Data;
