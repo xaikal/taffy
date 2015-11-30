@@ -52,6 +52,7 @@ public:
     QString getTag() const;
 
     virtual QString print() const override;
+    virtual bool exec(TaffyDB *db) override;
 
 private:
     QString tag;

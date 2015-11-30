@@ -24,6 +24,8 @@
 
 #include "removetagquery.h"
 
+#include "model/taffydb.h"
+
 namespace taffy {
 
 RemoveTagQuery::RemoveTagQuery(const QString &tag, const QStringList &files)
@@ -45,6 +47,22 @@ QString RemoveTagQuery::getTag() const
 QString RemoveTagQuery::print() const
 {
     return QString("Remove tag '%1'' from file(s) '%2'").arg(getTag()).arg(getFiles().join(", "));
+}
+
+bool RemoveTagQuery::exec(TaffyDB *db)
+{
+    Tag t(tag);
+    QStringList files = this->getFiles();
+    for (auto i = files.cbegin(); i != files.cend(); i++) {
+        File f(*i);
+        if (!f.exists()) {
+            QString msg("File '%1' does not exist.");
+            msg = msg.arg(*i);
+            postWarning(msg);
+        }
+        db->removeTagFromFile(t, f);
+    }
+    return true;
 }
 
 }

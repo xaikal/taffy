@@ -24,6 +24,8 @@
 
 #include "addtagquery.h"
 
+#include "model/taffydb.h"
+
 namespace taffy {
 
 AddTagQuery::AddTagQuery(const QString &tag, const QStringList &files)
@@ -45,6 +47,23 @@ QString AddTagQuery::getTag() const
 QString AddTagQuery::print() const
 {
     return QString("Add tag '%1'' to file(s) '%2'").arg(getTag()).arg(getFiles().join(", "));
+}
+
+bool AddTagQuery::exec(TaffyDB *db)
+{
+    Tag t(tag);
+    QStringList files = this->getFiles();
+    for (auto i = files.cbegin(); i != files.cend(); i++) {
+        File f(*i);
+        if (!f.exists()) {
+            QString msg("File '%1' does not exist.");
+            msg = msg.arg(*i);
+            postError(msg);
+            return false;
+        }
+        db->addTagToFile(t, f);
+    }
+    return true;
 }
 
 }

@@ -24,6 +24,8 @@
 
 #include "listfilesquery.h"
 
+#include "model/taffydb.h"
+
 namespace taffy {
 
 ListFilesQuery::ListFilesQuery(const QString &tag, const QStringList &files)
@@ -49,6 +51,24 @@ QString ListFilesQuery::print() const
         return QString("Show files with tag '%1' matching '%2'").arg(getTag()).arg(files.join(", "));
     }
     return QString("Show files with tag '%1'").arg(getTag());
+}
+
+bool ListFilesQuery::exec(TaffyDB *db)
+{
+    Tag t(tag);
+    QList<std::shared_ptr<File> > files = db->listFilesWithTag(t);
+
+    for (auto i = files.cbegin(); i != files.cend(); i++) {
+        std::shared_ptr<File> f = *i;
+        if (! f->exists()) {
+            QString msg("File '%1' does not exist.");
+            msg = msg.arg(f->getPath());
+            postWarning(msg);
+        } else {
+            addResult(f->getPath());
+        }
+    }
+    return true;
 }
 
 }

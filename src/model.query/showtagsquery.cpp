@@ -24,6 +24,8 @@
 
 #include "showtagsquery.h"
 
+#include "model/taffydb.h"
+
 namespace taffy {
 
 ShowTagsQuery::ShowTagsQuery(const QStringList &files)
@@ -40,6 +42,26 @@ ShowTagsQuery::~ShowTagsQuery()
 QString ShowTagsQuery::print() const
 {
     return QString("Show tags for file(s) '%1'").arg(getFiles().join(", "));
+}
+
+bool ShowTagsQuery::exec(TaffyDB *db)
+{
+    QStringList files = this->getFiles();
+    for (auto i = files.cbegin(); i != files.cend(); i++) {
+        File f(*i);
+        if (!f.exists()) {
+            QString msg("File '%1' does not exist.");
+            msg = msg.arg(*i);
+            postError(msg);
+            return false;
+        }
+        QList<std::shared_ptr<Tag> > tags = db->showTagsOfFile(f);
+        for (auto j = tags.cbegin(); j != tags.cend(); j++) {
+            std::shared_ptr<Tag> t = *j;
+            addResult(t->getTag());
+        }
+    }
+    return true;
 }
 
 }

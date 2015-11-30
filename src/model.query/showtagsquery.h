@@ -44,6 +44,7 @@ public:
     virtual ~ShowTagsQuery();
 
     virtual QString print() const override;
+    virtual bool exec(TaffyDB *db) override;
 };
 
 }
