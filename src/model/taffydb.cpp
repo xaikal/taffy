@@ -27,9 +27,13 @@
 #include "model.query/query.h"
 
 #include <QtSql>
-#include "dbscheme.cpp"
+#include "taffydb_impl.cpp"
 
 namespace taffy {
+
+struct TaffyDB::Data {
+    QSqlDatabase db;
+};
 
 TaffyDB::TaffyDB()
   : d(new Data)

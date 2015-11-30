@@ -5,4 +5,5 @@ HEADERS += \
 SOURCES += \
     $$PWD/taffydb.cpp \
     $$PWD/dbscheme.cpp \
-    $$PWD/querymanager.cpp
+    $$PWD/querymanager.cpp \
+    $$PWD/taffydb_impl.cpp
