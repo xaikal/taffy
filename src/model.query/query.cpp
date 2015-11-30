@@ -26,15 +26,25 @@
 
 namespace taffy {
 
+struct Query::Data {
+    QStringList files;
+
+    QStringList results;
+    QStringList errors;
+    QStringList warnings;
+
+    Data(const QStringList &files) : files(files) { }
+};
+
 Query::Query(const QStringList &files)
-  : files(files)
+  : d(new Data(files))
 {
 
 }
 
 Query::~Query()
 {
-
+    delete d;
 }
 
 bool Query::exec(TaffyDB*)
@@ -44,7 +54,37 @@ bool Query::exec(TaffyDB*)
 
 QStringList Query::getFiles() const
 {
-    return files;
+    return d->files;
+}
+
+QStringList Query::getResultSet() const
+{
+    return d->results;
+}
+
+QStringList Query::getErrors() const
+{
+    return d->errors;
+}
+
+QStringList Query::getWarnings() const
+{
+    return d->warnings;
+}
+
+void Query::addResult(const QString &result)
+{
+    d->results.append(result);
+}
+
+void Query::postError(const QString &msg)
+{
+    d->errors.append(msg);
+}
+
+void Query::postWarning(const QString &msg)
+{
+    d->warnings.append(msg);
 }
 
 }

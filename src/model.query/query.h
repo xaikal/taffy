@@ -61,8 +61,20 @@ public:
      */
     QStringList getFiles() const;
 
+    QStringList getResultSet() const;
+    QStringList getErrors() const;
+    QStringList getWarnings() const;
+
+protected:
+    void addResult(const QString &result);
+
+    void postError(const QString &msg);
+    void postWarning(const QString &msg);
+
+
 private:
-    QStringList files;
+    struct Data;
+    Data *d;
 };
 
 }

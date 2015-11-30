@@ -180,10 +180,27 @@ int Taffy::run()
 
     QueryManager manager;
     bool success = manager.acceptQuery(query);
+    if (!success) {
+        QStringList errors = query->getErrors();
+        for (auto i = errors.cbegin(); i != errors.cend(); i++) {
+            fputs("Error: ", stderr);
+            fputs(qPrintable(*i), stderr);
+            fputs("\n", stderr);
+        }
+        return 1;
+    }
 
-#ifdef QT_DEBUG
-    qDebug() << "Query" << (success ? "was successful." : "failed.");
-#endif
+    QStringList warnings = query->getWarnings();
+    for (auto i = warnings.cbegin(); i != warnings.cend(); i++) {
+        fputs("Warning: ", stderr);
+        fputs(qPrintable(*i), stderr);
+        fputs("\n", stderr);
+    }
+
+    QStringList resultSet = query->getResultSet();
+    for (auto i = resultSet.cbegin(); i != resultSet.cend(); i++) {
+        printf("%s\n", qPrintable(*i));
+    }
 
     return 0;
 }
