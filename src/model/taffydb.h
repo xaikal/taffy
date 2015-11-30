@@ -48,6 +48,9 @@ public:
     QList<std::shared_ptr<Tag> > showTagsOfFile(File &file);
     QList<std::shared_ptr<File> > listFilesWithTag(Tag &tag);
 
+    QString getDBLocation();
+    void setDBLocation(const QString &path);
+
 private:
     struct Data;
     Data *d;

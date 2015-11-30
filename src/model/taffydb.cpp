@@ -27,11 +27,18 @@
 #include "model.query/query.h"
 
 #include <QtSql>
+#include <QDir>
+
 #include "taffydb_impl.cpp"
+
+#include <cstdlib>
 
 namespace taffy {
 
+const QString DB_FILE_NAME("/.taffy.db");
+
 struct TaffyDB::Data {
+    QString dbLocation;
     QSqlDatabase db;
 };
 
@@ -58,7 +65,11 @@ bool TaffyDB::connect()
     }
 
     d->db = QSqlDatabase::addDatabase("QSQLITE");
-    d->db.setDatabaseName(":memory:");
+    getDBLocation();
+#ifdef QT_DEBUG
+    qDebug() << "DB location is" << d->dbLocation;
+#endif
+    d->db.setDatabaseName(d->dbLocation);
     QSqlError error = initDb(d->db);
 
     if (error.type() != QSqlError::NoError) {
@@ -106,6 +117,38 @@ QList<std::shared_ptr<Tag> > TaffyDB::showTagsOfFile(File &file)
 QList<std::shared_ptr<File> > TaffyDB::listFilesWithTag(Tag &tag)
 {
     return listFilesByTag(tag);
+}
+
+QString TaffyDB::getDBLocation()
+{
+    if (!d->dbLocation.isEmpty()) {
+        return d->dbLocation;
+    }
+
+    QString dbPath = DB_FILE_NAME;
+    bool useHomeDir = true;
+
+    char *taffy_home = getenv("TAFFY_HOME");
+    if (taffy_home != NULL && taffy_home[0] != '\0') {
+        QDir taffyHome(taffy_home);
+        if (taffyHome.exists()) {
+            dbPath.prepend(taffyHome.absolutePath());
+            useHomeDir = false;
+        }
+    }
+
+    if (useHomeDir) {
+        dbPath.prepend(QDir::homePath());
+    }
+
+    d->dbLocation = dbPath;
+
+    return dbPath;
+}
+
+void TaffyDB::setDBLocation(const QString &path)
+{
+    d->dbLocation = path;
 }
 
 }
