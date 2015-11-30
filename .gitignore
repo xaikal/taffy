@@ -30,3 +30,4 @@
 # Project specific
 /build/
 *.pro.user
+.taffy.db
