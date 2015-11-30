@@ -104,7 +104,7 @@ const QLatin1String DB_SHOW_TAGS_OF_FILE(
         "  AND f.file_path  = :path");
 
 const QLatin1String DB_TAG_FILE_CHECK(
-        "SELECT id"
+        "SELECT id "
         "FROM taggings "
         "WHERE file = :file "
         "AND   tag  = :tag");
@@ -114,7 +114,7 @@ const QLatin1String DB_TAG_FILE(
         "VALUES                (:file, :tag)");
 
 const QLatin1String DB_UNTAG_FILE(
-        "DELETE FROM taggings"
+        "DELETE FROM taggings "
         "WHERE file = :file "
         "AND   tag  = :tag");
 
